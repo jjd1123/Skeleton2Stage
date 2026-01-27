@@ -1,51 +1,58 @@
+# ===== Standard library =====
 import multiprocessing
 import os
 import pickle
+import time
+import math
+import random
+import copy
+import gc
 from functools import partial
 from pathlib import Path
+
+# ===== Third-party =====
 import yaml
 from easydict import EasyDict
-import time
 
+import numpy as np
 import torch
 import torch.nn.functional as F
+from torch.utils.data import DataLoader
 from torch.utils.data.sampler import RandomSampler
 from torch.cuda.amp import autocast
-import numpy as np
-import swanlab
-# import wandb as swanlab
+
 from accelerate import Accelerator, DistributedDataParallelKwargs
 from accelerate.state import AcceleratorState
-from torch.utils.data import DataLoader
-from tqdm import tqdm
-import math
-from  scipy.ndimage import gaussian_filter as G
-from scipy.signal import argrelextrema
-# from peft
+from accelerate.utils import set_seed
 
-from dataset.dance_dataset import AISTPPDataset,AISTPPDataset_RL
+from tqdm import tqdm
+
+from scipy.ndimage import gaussian_filter as G
+from scipy.signal import argrelextrema
+from scipy.spatial.transform import Rotation as sRot
+
+# ===== Local imports =====
+from dataset.dance_dataset import AISTPPDataset, AISTPPDataset_RL
 from dataset.preprocess import increment_path
+
 from model.adan import Adan
 from model.diffusion import GaussianDiffusion
 from model.model import DanceDecoder
-from vis import SMPLSkeleton
 from model.stat_tracking import PerPromptStatTracker
+
+from vis import SMPLSkeleton
+
 from model.Bailando.sep_vqvae import SepVQVAE
 from model.imitation.embodied_pose.utils.edge.quaternion import ax_from_6v
-# from smplx import SMPL
-from scipy.spatial.transform import Rotation as sRot
-# from peft import LoraConfig,get_peft_model
-import random
-from accelerate.utils import set_seed
-import copy
-import gc
-try:
-    from model.imitation.embodied_pose.run_player import get_agent,get_player
-    from model.Bailando.utils.kinetic import KineticFeatures
-except:
-    pass
-# TODO: clean import packages
 
+# ===== Optional (may not exist in all environments) =====
+try:
+    from model.imitation.embodied_pose.run_player import get_agent, get_player
+    from model.Bailando.utils.kinetic import KineticFeatures
+except ImportError:
+    pass
+
+# Hard Code. True means finetuning PopDG.
 PopDance = False
 if PopDance == True:
     from model.POPDG.model.model import Model
@@ -60,60 +67,10 @@ def unwrap(x):
 def maybe_wrap(x, num):
     return x if num == 1 else wrap(x)
 
-# def set_seed(seed, torch_deterministic=False):
-#     if seed == -1 and torch_deterministic:
-#         seed = 42
-#     elif seed == -1:
-#         seed = np.random.randint(0, 10000)
-#     print("Setting seed: {}".format(seed))
-
-#     random.seed(seed)
-#     np.random.seed(seed)
-#     torch.manual_seed(seed)
-#     os.environ['PYTHONHASHSEED'] = str(seed)
-#     torch.cuda.manual_seed(seed)
-#     torch.cuda.manual_seed_all(seed)
-
-#     if torch_deterministic:
-#         # refer to https://docs.nvidia.com/cuda/cublas/index.html#cublasApi_reproducibility
-#         os.environ['CUBLAS_WORKSPACE_CONFIG'] = ':4096:8'
-#         torch.backends.cudnn.benchmark = False
-#         torch.backends.cudnn.deterministic = True
-#         torch.set_deterministic(True)
-#     else:
-#         torch.backends.cudnn.benchmark = True
-#         torch.backends.cudnn.deterministic = False
-
-#     return seed
-
-# def calc_db(keypoints_seqs):
-#     # keypoints_seqs = keypoints_seqs.data.cpu().numpy()
-#     beats_np = []
-#     for keypoints in keypoints_seqs:    
-#         keypoints = np.array(keypoints).reshape(-1, 24, 3)
-#         kinetic_vel = np.mean(np.sqrt(np.sum((keypoints[1:] - keypoints[:-1]) ** 2, axis=2)), axis=1)
-#         kinetic_vel = G(kinetic_vel, 5)
-#         # print(len(kinetic_vel))
-#         motion_beats = argrelextrema(kinetic_vel, np.less)
-#         beat_np = np.zeros(len(keypoints))
-#         beat_np[motion_beats] = 1
-#         beats_np.append(beat_np)
-
-#     motion_beats = torch.from_numpy(np.stack(beats_np)).float().cuda()
-#     b, t = motion_beats.size()
-#     return motion_beats.view(b, t//8, 8).max(2)[0]
-
-
-# def ba_reward(keypoints, beats):
-#     keypoints = keypoints.data.cpu().numpy()
-#     dance_beats = calc_db(keypoints)
-#     b, t = beats.size()
-#     beats = beats.view(b, t//8, 8).float().max(2)[0]
-
-#     # To keep same as paper, uncomment the following two lines
-#     dance_beats[beats == 0] = 1
-#     beats[:, :] = 1
-#     return (beats*dance_beats - 0.5) * 10
+def load_reward_config(path: str) -> dict:
+    with open(path, "r", encoding="utf-8") as f:
+        cfg = yaml.safe_load(f)
+    return cfg
 
 class EDGE:
     def __init__(
@@ -132,7 +89,6 @@ class EDGE:
         state = AcceleratorState()
         set_seed(42,True)
         torch.backends.cudnn.deterministic = True
-        # state.deepspeed_plugin.deepspeed_config["train_micro_batch_size_per_gpu"] = 128
         num_processes = state.num_processes
 
         # model's config init
@@ -272,8 +228,6 @@ class EDGE:
 
     def pfc_score(self,x):
         b,constant_length = x.shape[:2]
-            # smpl = SMPL(model_path="/mnt/Nerf001/jidong/EDGE/model/imitation/data/smpl"
-            #             ,gender='MALE', batch_size=B*constant_length)
         smpl = self.diffusion.smpl
         n_joints = 24
         sample = self.normalizer.unnormalize(x)
@@ -283,8 +237,6 @@ class EDGE:
         else:
             trans = sample[...,4:7].reshape(b,constant_length,3).clone() #b*l*3
             pose_6d = sample[...,7:].reshape(b,constant_length,n_joints,6)
-        # trans = x[...,4:7] #b*l*3
-        # pose_aa  = ax_from_6v(x[...,7:].reshape(B,constant_length,n_joints,6))
         pose_aa = ax_from_6v(pose_6d)
         joint = smpl.forward(
             pose_aa,trans
@@ -316,43 +268,10 @@ class EDGE:
             foot_mins[:, :, 0] * foot_mins[:, :, 1] * root_a
         )  # min leftv * min rightv * root_a (b, S-2,)
         foot_loss = np.exp(-1000*foot_loss.mean(axis=-1))
-        # scores.append(foot_loss)
-        # # names.append(pkl)
-        # accelerations.append(foot_mins[:, 0].mean())
-        # for idx in range(joint.shape[0]):
-        #     # info = pickle.load(open(pkl, "rb"))
-        #     joint3d = joint[idx]
-        #     root_v = (joint3d[1:, 0, :] - joint3d[:-1, 0, :]) / DT  # root velocity (S-1, 3)
-        #     root_a = (root_v[1:] - root_v[:-1]) / DT  # (S-2, 3) root accelerations
-        #     # clamp the up-direction of root acceleration
-        #     root_a[:, up_dir] = np.maximum(root_a[:, up_dir], 0)  # (S-2, 3)
-        #     # l2 norm
-        #     root_a = np.linalg.norm(root_a, axis=-1)  # (S-2,)
-        #     scaling = root_a.max()
-        #     root_a /= scaling
-
-        #     foot_idx = [7, 10, 8, 11]
-        #     feet = joint3d[:, foot_idx]  # foot positions (S, 4, 3)
-        #     foot_v = np.linalg.norm(
-        #         feet[2:, :, flat_dirs] - feet[1:-1, :, flat_dirs], axis=-1
-        #     )  # (S-2, 4) horizontal velocity
-        #     foot_mins = np.zeros((len(foot_v), 2))
-        #     foot_mins[:, 0] = np.minimum(foot_v[:, 0], foot_v[:, 1])
-        #     foot_mins[:, 1] = np.minimum(foot_v[:, 2], foot_v[:, 3])
-
-        #     foot_loss = (
-        #         foot_mins[:, 0] * foot_mins[:, 1] * root_a
-        #     )  # min leftv * min rightv * root_a (S-2,)
-        #     foot_loss = np.exp(-1000*foot_loss.mean())
-        #     scores.append(foot_loss)
-        #     # names.append(pkl)
-        #     accelerations.append(foot_mins[:, 0].mean())
         return torch.as_tensor(foot_loss)
 
     def compute_reward(self,x,x_origin):
         B,constant_length = x.shape[:2]
-        # smpl = SMPL(model_path="/mnt/Nerf001/jidong/EDGE/model/imitation/data/smpl"
-        #             ,gender='MALE', batch_size=B*constant_length)
         smpl = self.diffusion.smpl
         n_joints = 24
         x = self.normalizer.unnormalize(x)
@@ -417,14 +336,13 @@ class EDGE:
             trans = sample[...,:3].reshape(b,constant_length,3).clone()
         else:
             trans = sample[...,4:7].reshape(b,constant_length,3).clone() #b*l*3
-        # trans[...,2] = 0 #modified to improve foot ground contact
+        trans[...,2] = 0 #modified to improve foot ground contact
         if PopDance == True:
             pose_6d = sample[...,3:3+24*6].reshape(b,constant_length,n_joints,6)
         else:
             pose_6d = sample[...,7:].reshape(b,constant_length,n_joints,6)
         pose_aa = ax_from_6v(pose_6d)
         smpl = self.diffusion.smpl
-        # import ipdb;ipdb.set_trace()
         position = smpl.forward(pose_aa,trans).detach().clone().cpu().numpy()
         # position = position - trans[...,2].numpy()
         ks = []
@@ -436,17 +354,6 @@ class EDGE:
             kd += (k.average_kinetic_energy(j))
         kd /= (len(chosen_joints)*2)
         ks = torch.tensor(kd)
-        # sample_x = normalizer.unnormalize(x)
-        # trans_x = sample_x[...,4:7].reshape(b,3,constant_length//3,3) #b*l*3
-        # pose_6d_x = sample_x[...,7:].reshape(b,3,constant_length//3,n_joints,6)
-        # trans_freeze = ((trans[...,1:,:]-trans[...,:-1,:])**2).mean(dim=(-1,-2))
-        # trans_x_freeze = ((trans_x[...,1:,:]-trans_x[...,:-1,:])**2).mean(dim=(-1,-2))
-        # pose_6d_freeze = ((pose_6d[:,:,1:,chosen_joints]-pose_6d[:,:,:-1,chosen_joints])**2).mean(dim=(-1,-2,-3))
-        # pose_6d_x_freeze = ((pose_6d_x[:,:,1:]-pose_6d_x[:,:,:-1])**2).mean(dim=(-1,-2,-3))
-        # trans_rate = (trans_freeze/trans_x_freeze).mean(dim=1)
-        # pose_rate = (pose_6d_freeze/pose_6d_x_freeze).mean(dim=1)
-        # rate = torch.where((trans_rate+pose_rate)/2>1,1.0,(trans_rate+pose_rate)/2)
-        # rate = trans_freeze.mean(dim=1)+pose_6d_freeze.mean(dim=1)
         return ks
     
     def compute_fgc(self,recon_x,normalizer):
@@ -562,15 +469,17 @@ class EDGE:
         # training setup
         # finetune means using the motion generated by diffusion model to finetune the imitation policy.
         # use_isaac means using the imitation policy to compute the imitation reward.
+        reward_cfg = load_reward_config(opt.reward_config)
         finetune = False
-        use_isaac = True
+        use_isaac = reward_cfg["imitation"]["enabled"]
         inner_epoch = 1
         sample_steps = 1
+        logging_backend = opt.log_choice
 
 
         # the training dataset needs extra processing and is named train_rl_tensor_dataset; while the test dataset are the same dataset as EDGE.
         if PopDance==True:
-            opt.processed_data_dir = "/data/PhysDanceRL/code/rl_finetune/data/dataset_backups/popdg"
+            opt.processed_data_dir = "./data/dataset_backups/popdg"
         train_tensor_dataset_path = os.path.join(
             opt.processed_data_dir, f"train_rl_tensor_dataset.pkl"
         )
@@ -621,13 +530,7 @@ class EDGE:
         # ba_tracker = PerPromptStatTracker(32,16)
         # root_tracker = PerPromptStatTracker(32*150 ,16*150)
         if PopDance == True:
-            pfc_tracker = PerPromptStatTracker(32,16)
-        # TODO 是否加imitation reward per frame；
-        # TODO 是否把32和16放大150倍；
-        # TODO 不用MDP？改成类似ReinDiffuse
-        # stat_tracker = PerPromptStatTracker(10000,10000)
-        # kl_tracker = PerPromptStatTracker(10000,10000)
-        # freezing_tracker = PerPromptStatTracker(10000,10000)        
+            pfc_tracker = PerPromptStatTracker(32,16)   
         
         # data loaders
         # decide number of workers based on cpu count
@@ -650,22 +553,6 @@ class EDGE:
         #     pin_memory=True,
         #     drop_last=True,
         # )
-        # simple_dataset_path = os.path.join(
-        #     opt.processed_data_dir, f"train_tensor_dataset.pkl"
-        # )
-        # if os.path.exists(simple_dataset_path):
-        #     simple_dataset = pickle.load(open(simple_dataset_path, "rb"))
-        #     simple_dataset.generate_idx()
-        #     simple_data_loader = DataLoader(
-        #         simple_dataset,
-        #         batch_size=256//2,
-        #         shuffle=True,
-        #         num_workers=0,#min(int(num_cpus * 0.75), 32),
-        #         pin_memory=True,
-        #         drop_last=True,
-        #         # sampler= RandomSampler(train_dataset,replacement=True,num_samples=opt.batch_size*2),
-        #     )
-        #     simple_data_loader_iter = iter(simple_data_loader)
 
 
         train_data_loader = self.accelerator.prepare(train_data_loader)
@@ -680,12 +567,18 @@ class EDGE:
         if self.accelerator.is_main_process:
             save_dir = str(increment_path(Path(opt.project) / opt.exp_name))
             opt.exp_name = save_dir.split("/")[-1]
-            swanlab.init(project=opt.wandb_pj_name, workspace="jidong", experiment_name=opt.exp_name)
             save_dir = Path(save_dir)
-            wdir = "/data/PhysDanceRL" / save_dir / "weights" #TODO: remove absolute path
+            wdir = save_dir / "weights" #TODO: remove absolute path
             wdir.mkdir(parents=True, exist_ok=True)
-            from torch.utils.tensorboard import SummaryWriter
-            tb_logger = SummaryWriter(f"tensorboard/{opt.exp_name}")
+            if logging_backend=="wandb":
+                import wandb
+                wandb.init(project=opt.wandb_pj_name, name=opt.exp_name)
+            elif logging_backend=="swanlab":
+                import swanlab 
+                swanlab.init(project=opt.wandb_pj_name, workspace=opt.workspace, experiment_name=opt.exp_name)
+            else:
+                from torch.utils.tensorboard import SummaryWriter
+                tb_logger = SummaryWriter(f"tensorboard/{opt.exp_name}")
 
         self.accelerator.wait_for_everyone()
         for epoch in range(1, opt.epochs + 1):
@@ -730,17 +623,15 @@ class EDGE:
                             shape = shape.shape
                         time_step,latent,cond,log_prob,recon_x,x_start = self.diffusion.ddim_sample(shape,cond,return_logprob=True)
                         x_starts.append(x_start)
-                        # freezing_rate = self.compute_freezing(recon_x.detach().clone(),self.normalizer)
                         freezing_rate = self.compute_k(recon_x.detach().clone(),self.normalizer).to(self.accelerator.device)
                         fgc = self.compute_fgc(recon_x.detach().clone(),self.normalizer).to(self.accelerator.device)
                         # ba = self.compute_ba(recon_x.detach().clone(),beats,self.normalizer).to(self.accelerator.device)
                         if PopDance == True:
                             pfc = self.pfc_score(recon_x.detach().clone()).to(self.accelerator.device)
-                        # import ipdb;ipdb.set_trace()
                         if use_isaac:
                             motion_lib = player.phys_proj_edge(self.normalizer,1,recon_x.detach().clone().cpu(),return_reward=True,
                                                 device = self.accelerator.device,multi_process="thread",
-                                                accelerator=self.accelerator,steps=step,save_motion=True)
+                                                accelerator=self.accelerator,steps=step,save_motion=True,batch_size=opt.batch_size*4)
                             motion_libs.append(motion_lib)
                         else:
                             reward = torch.zeros(shape[0],device=self.accelerator.device)
@@ -776,7 +667,7 @@ class EDGE:
                 for motion_lib in motion_libs:
                     reward,alive = player.phys_proj_edge(self.normalizer,1,motion_lib,return_reward=True,
                                         device = self.accelerator.device,multi_process="thread",
-                                        accelerator=self.accelerator,steps=0,save_motion=False)
+                                        accelerator=self.accelerator,steps=0,save_motion=False,batch_size=opt.batch_size*4)
                     # reward[reward>0.8]=0.8
                     alives.append(alive.cpu())
                     rewards.append(self.accelerator.gather(reward).cpu()
@@ -822,14 +713,27 @@ class EDGE:
                 pfcs = torch.as_tensor(pfc_tracker.update(indexs,pfcs))
             # root_rewards = torch.as_tensor(root_tracker.update(indexs,root_rewards))
             norm_reward = rewards.mean()
-            weight = 0.0
-            fgc_weight = 0.01
-            # bas_weight = 0.00
-            pfc_weight = 0.0
-            if PopDance == True:
-                rewards =  (weight*freezings).reshape(-1,1)+(1-weight)*rewards.reshape(-1,1)+fgc_weight*fgcs+pfc_weight*pfcs.reshape(-1,1)#root_rewards#
-            else:
-                rewards =  (weight*freezings).reshape(-1,1)+(1-weight)*rewards.reshape(-1,1)+fgc_weight*fgcs#+bas_weight*bas.reshape(-1,1)
+            reward_list = []
+            for key in reward_cfg.keys():
+                if reward_cfg[key]["enabled"]:
+                    if key == "imitation":
+                        reward_list.append(reward_cfg[key]["weight"]*rewards.reshape(-1,1))
+                    elif key == "antifreezing":
+                        reward_list.append(reward_cfg[key]["weight"]*freezings.reshape(-1,1))
+                        
+                    elif key == "fgcontact":
+                        reward_list.append(reward_cfg[key]["weight"]*fgcs)
+                    elif key == "pfc" and PopDance == True:
+                        reward_list.append(reward_cfg[key]["weight"]*pfcs.reshape(-1,1))
+            rewards = sum(reward_list)
+            # weight = 0.0
+            # fgc_weight = 0.01
+            # # bas_weight = 0.00
+            # pfc_weight = 0.0
+            # if PopDance == True:
+            #     rewards =  (weight*freezings).reshape(-1,1)+(1-weight)*rewards.reshape(-1,1)+fgc_weight*fgcs+pfc_weight*pfcs.reshape(-1,1)#root_rewards#
+            # else:
+            #     rewards =  (weight*freezings).reshape(-1,1)+(1-weight)*rewards.reshape(-1,1)+fgc_weight*fgcs#+bas_weight*bas.reshape(-1,1)
             #TODO maybe reduce fgcs weights
             # only for multi-gpu
             rewards = (rewards.reshape(self.accelerator.num_processes,-1)[self.accelerator.process_index]).reshape(opt.batch_size*4,-1)
@@ -839,9 +743,10 @@ class EDGE:
                 # isacc_reward = torch.concatenate(all_rewards_isaac,dim=0).mean()
                 if PopDance == True:
                     log_dict = {
-                            "weight": weight,
-                            "fgc_weight": fgc_weight,
-                            "pfc_weight": pfc_weight,
+                            "imitation_weight": reward_cfg["imitation"]["weight"],
+                            "freezing_weight":reward_cfg["antifreezing"]["weight"],
+                            "fgc_weight": reward_cfg["fgcontact"]["weight"],
+                            "pfc_weight": reward_cfg["pfc"]["weight"],
                             "Train reward": avg_reward,
                             # "kl reward": avg_kl_reward,
                             # "kl_norm_reward": kl_rewards.mean(),
@@ -860,8 +765,9 @@ class EDGE:
                         }
                 else:
                     log_dict = {
-                            "weight": weight,
-                            "fgc_weight": fgc_weight,
+                            "imitation_weight": reward_cfg["imitation"]["weight"],
+                            "freezing_weight": reward_cfg["antifreezing"]["weight"],
+                            "fgc_weight": reward_cfg["fgcontact"]["weight"],
                             # "pfc_weight": pfc_weight,
                             "Train reward": avg_reward,
                             # "kl reward": avg_kl_reward,
@@ -881,9 +787,13 @@ class EDGE:
                             # "Quant reward": quants_reward,
                             # "Isacc reward": isacc_reward
                         }
-                swanlab.log(log_dict)
-                for k,v in log_dict.items():
-                    tb_logger.add_scalar(k,v,epoch)
+                if logging_backend=="wandb":
+                    wandb.log(log_dict)
+                elif logging_backend=="swanlab":
+                    swanlab.log(log_dict)
+                else:
+                    for k,v in log_dict.items():
+                        tb_logger.add_scalar(k,v,epoch)
             del fgc,log_prob,x,cond,x_start,recon_x,index,latent,freezing_rate,alive,motion_lib,motion_libs,reward
             # latents = self.accelerator.gather(latents.to(self.accelerator.device)).cpu()
             # log_probs  = self.accelerator.gather(log_probs.to(self.accelerator.device)).cpu()
@@ -902,7 +812,7 @@ class EDGE:
             num_cpus = multiprocessing.cpu_count()
             RL_data_loader = DataLoader(
                 RL_dataset,
-                batch_size=256//2,
+                batch_size=opt.batch_size*4,
                 shuffle=True,
                 num_workers=0,#min(int(num_cpus * 0.75), 32),
                 pin_memory=True,
@@ -927,10 +837,10 @@ class EDGE:
                     perms = torch.stack(
                         [
                             torch.randperm(50, device=self.accelerator.device)
-                            for _ in range(256//2)
+                            for _ in range(opt.batch_size*4)
                         ]
                     )
-                    perms_help = torch.arange(256//2,device=self.accelerator.device)[:,None]
+                    perms_help = torch.arange(opt.batch_size*4,device=self.accelerator.device)[:,None]
                     reward = reward.to(self.accelerator.device)
                     # alive = alive.to(self.accelerator.device)
                     latent = latent.to(self.accelerator.device)[perms_help,perms]
@@ -961,7 +871,7 @@ class EDGE:
                         sigma = eta * ((1 - alpha / alpha_next) * (1 - alpha_next) / (1 - alpha)).sqrt()
                         
                         if not torch.all((x_start-x_starts[:,j])==0):
-                            print("what the ...??")
+                            print("maybe numerical error?")
                             print(f"at {j}")
                         c = (1 - alpha_next - sigma ** 2).sqrt()
                         # prev_sample_mean_kl = alpha_next.sqrt()*x_start_kl+c*pred_noise_kl
@@ -1077,8 +987,12 @@ class EDGE:
             # gc.collect()
             # torch.cuda.empty_cache() 
         if self.accelerator.is_main_process:
-            swanlab.finish()
-            tb_logger.close()
+            if logging_backend == "wandb":
+                wandb.finish()
+            elif logging_backend == "swanlab":
+                swanlab.finish()
+            else:
+                tb_logger.close()
     
     def eval(self):
         self.diffusion.eval()

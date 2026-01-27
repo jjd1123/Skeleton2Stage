@@ -847,7 +847,7 @@ class diff_player(ImitatorPlayer):
     @torch.no_grad()
     def phys_proj_edge(self,normalizer,motion_length_gt,sample,return_reward=False,
                        device=None,multi_process = "thread",
-                       accelerator = None,steps=None,save_motion=False):
+                       accelerator = None,steps=None,save_motion=False,batch_size=128):
         """
         Batch operation of motion
 
@@ -866,8 +866,8 @@ class diff_player(ImitatorPlayer):
         if type(sample) != torch.Tensor:
             self.task._motion_lib = sample
             B=self.task.num_envs
-            assert B == 128
-            b=128
+            assert B == batch_size
+            b=batch_size
             constant_length=150
             if return_reward==True:
                 reward,alive = self.imitation(constant_length,B,True)

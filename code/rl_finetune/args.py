@@ -39,7 +39,24 @@ def parse_train_opt():
     parser.add_argument(
         "--checkpoint", type=str, default="checkpoint.pt", help="trained checkpoint path (optional)"
     )
+    parser.add_argument(
+        "--reward_config",
+        type=str,
+        default="reward.yaml",
+        help="Path to the reward configuration file (optional).",
+    )
+    parser.add_argument(
+        "--log_choice",
+        choices=["wandb", "swanlab", "tensorboard"],
+        default="wandb",
+        help="Logging backend to use (optional).",
+    )
+    parser.add_argument(
+        "--workspace", type=str, default="", help="swanlab workspace name",
+    )
     opt = parser.parse_args()
+    if opt.log_choice == "swanlab" and not opt.workspace:
+        parser.error("--workspace is required when --log_choice=swanlab")
     return opt
 
 

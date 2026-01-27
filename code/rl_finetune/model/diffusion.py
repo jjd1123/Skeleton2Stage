@@ -37,20 +37,16 @@ def smooth_height_by_contact_delta(full_pos, full_pose, static_label,
                                   dmax=0.05,
                                   eps_floor=0.0):
     """
-    full_pos:  [B,T,3]  (CPU tensor也可以)
+    full_pos:  [B,T,3]
     full_pose: [B,T,24,3]
-    static_label: [B,T-1,J] bool  (你代码里的 static_label)
-    只修 full_pos[...,up_axis]，用接触段(静止段)把脚贴到 floor=eps_floor，并对修正量做高斯平滑。
+    static_label: [B,T-1,J] bool
     """
     B, T, _ = full_pos.shape
     device = full_pos.device
 
-    # 1) 把 static_label 对齐到 [B,T]，并汇总到单通道 contact01
-    #    你的是 (B, T-1, J)，代表 t->t+1 之间脚静止
     contact01 = static_label.any(dim=-1).float()         # [B, T-1]
     contact01 = torch.cat([contact01[:, :1], contact01], dim=1)  # [B, T]
 
-    # 2) 每帧脚底高度（取 joint_ids 的最小高度）
     ids = torch.as_tensor(joint_ids, device=device, dtype=torch.long)
     foot_h = full_pose[:, :, ids, up_axis].min(dim=-1).values     # [B,T]
 
@@ -500,7 +496,6 @@ class GaussianDiffusion(nn.Module):
             # squeeze the batch dimension away and render
         poses = self.smpl.forward(q, pos).detach().cpu().numpy()
         
-        # 假设 poses 和 smpl_parents 已定义
         smpl_parents = [
         -1,
         0,
@@ -542,14 +537,11 @@ class GaussianDiffusion(nn.Module):
             xx, yy = np.meshgrid(np.linspace(-1.5, 1.5, 2), np.linspace(-1.5, 1.5, 2))
             z = (-normal[0] * xx - normal[1] * yy - d) * 1.0 / normal[2]
 
-            # 绘制平面
             # ax.plot_surface(xx, yy, z, zorder=-11, cmap=cm.twilight)
 
-            # 创建线条，初始状态为空数据
             lines = [ax.plot([], [], [], zorder=10, linewidth=1.5)[0] for _ in smpl_parents]
             scat = [ax.scatter([], [], [], c=[], zorder=10, s=0, cmap=ListedColormap(["r", "g", "b"])) for _ in range(4)]
 
-            # 绘制骨架的一帧 (假设 frame_index 是我们要保存的帧索引)
             frame_index = 0
             frame_data = poses[frame_index]
             print(len(lines))
@@ -568,20 +560,10 @@ class GaussianDiffusion(nn.Module):
                             [frame_data[start, 1], frame_data[end, 1]])
                 line.set_3d_properties([frame_data[start, 2], frame_data[end, 2]])
 
-        # 填充数据到 scat
             for scatter, i in zip(scat, range(frame_data.shape[0])):
                 scatter._offsets3d = (frame_data[i:i+1, 0], frame_data[i:i+1, 1], frame_data[i:i+1, 2])
                 scatter.set_array(np.array([i]))
-            # 这里需要填充数据到 lines 和 scat
-            # 例如：
-            # for line, (start, end) in zip(lines, smpl_parents):
-            #     line.set_data([...])
-            #     line.set_3d_properties([...])
-            # for scatter, data in zip(scat, some_data_list):
-            #     scatter._offsets3d = ([...], [...], [...])
-            #     scatter.set_array([...])
 
-            # 设置透明背景并保存图片
             ax.set_axis_off()
             fig.patch.set_alpha(0.0)
             ax.w_xaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
@@ -591,7 +573,6 @@ class GaussianDiffusion(nn.Module):
             ax.w_yaxis.line.set_color((1.0, 1.0, 1.0, 0.0))
             ax.w_zaxis.line.set_color((1.0, 1.0, 1.0, 0.0))
 
-            # 保存图片
             plt.savefig(f'./image/frame_{step}_{j}.png', transparent=True)
     
     @torch.no_grad()
@@ -1170,16 +1151,13 @@ class GaussianDiffusion(nn.Module):
             full_pos = smooth_height_by_contact_delta(     
                 full_pos=full_pos,                         
                 full_pose=full_pose,                       
-                static_label=static_label,  # 你上面算出来的  
-                joint_ids=joint_ids,        # [7,8,10,11]  
+                static_label=static_label,
+                joint_ids=joint_ids, 
                 up_axis=2,                                 
-                sigma=1.2,                  # 30fps可以从1.0~1.5试
-                dmax=0.06,                  # 每帧最大修正(米)，按你数据调
-                eps_floor=0.0               # 想留一点不穿地余量可设0.005
+                sigma=1.2,
+                dmax=0.06,
+                eps_floor=0.0
             )
-
-            # 如果你要保存 full_pose 也一致，建议更新 full_pose（需要重算FK更准确）
-            # 这里最稳的是再跑一次 forward:
             full_pose = self.smpl.forward(full_q.cuda(), full_pos.cuda()).detach().cpu()
             ######################################################################################
             # squeeze the batch dimension away and render

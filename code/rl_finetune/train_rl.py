@@ -5,8 +5,6 @@ import os;os.environ["WANDB_MODE"]="offline"
 
 def train_rl(opt):
     model = EDGE(opt.feature_type,opt.checkpoint)
-    # print(model.accelerator.device)
-    # print(model.accelerator.device.index)
     player = get_player(device = model.accelerator.device)
     model.train_rl(opt,player)
 
