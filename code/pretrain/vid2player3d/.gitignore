@@ -1,0 +1,7 @@
+!LICENSE.txt
+!/doc/*
+!/embodied_pose/env
+!/embodied_pose/data
+!/embodied_pose/MDM/data_loaders/humanml/data
+!/vid2player/data
+!/vid2player/env
