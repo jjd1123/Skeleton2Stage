@@ -1,0 +1,49 @@
+structure:
+    name: SepVQVAER
+    up_half:
+    #ChoreoGrapher Configs
+        levels: 1
+        downs_t: [3,]
+        strides_t : [2,]
+        emb_width : 512
+        l_bins : 512
+        l_mu : 0.99
+        commit : 0.02
+        hvqvae_multipliers : [1,]
+        width: 512
+        depth: 3
+        m_conv : 1.0
+        dilation_growth_rate : 3
+        sample_length: 150
+        use_bottleneck: True
+        joint_channel: 3
+        # depth: 3
+        # width: 128
+        # m_conv: 1.0
+        # dilation_growth_rate: 1
+        # dilation_cycle: None
+        vqvae_reverse_decoder_dilation: True
+    down_half:
+        levels: 1
+        downs_t: [3,]
+        strides_t : [2,]
+        emb_width : 512
+        l_bins : 512
+        l_mu : 0.99
+        commit : 0.02
+        hvqvae_multipliers : [1,]
+        width: 512
+        depth: 3
+        m_conv : 1.0
+        dilation_growth_rate : 3
+        sample_length: 150
+        use_bottleneck: True
+        joint_channel: 3
+        # depth: 3
+        # width: 128
+        # m_conv: 1.0
+        # dilation_growth_rate: 1
+        # dilation_cycle: None
+        vqvae_reverse_decoder_dilation: True
+    use_bottleneck: True
+    joint_channel: 3
