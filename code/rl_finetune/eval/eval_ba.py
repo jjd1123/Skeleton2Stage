@@ -17,7 +17,6 @@ from tqdm import tqdm
 
 def get_mb(key, length=None):
     music_root = "../../Bailando/data/aistpp_test_full_wav"
-    # music_root = "/workspace/jja3wx/popdg_dataprocess/POPDG-main/data/test/wavs"
     path = os.path.join(music_root, key)
     with open(path) as f:
         #print(path)

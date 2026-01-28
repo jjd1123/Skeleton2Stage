@@ -1,3 +1,4 @@
+# This is a modified version of vid2player3d
 # Learning Physically Simulated Tennis Skills from Broadcast Videos
 
 <strong>Haotian zhang</strong>, Ye Yuan, Viktor Makoviychuk, Yunrong Guo, Sanja Fidler, Xue Bin Peng, Kayvon Fatahalian
