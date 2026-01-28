@@ -43,6 +43,13 @@ pip install -r requirements.txt
 python setup.py develop
 ```
 
+## Model Weights
+- VPoser weights: Download the pretrained VPoser checkpoint(s) from the SMPL-X project page. The tutorials include guidance on expected folder layout and how to point the code to the checkpoint.
+- SMPL-X body models: Download SMPL-X model files (e.g., `model.npz`) from the SMPL-X website (registration required). You will need to provide the path via `bm_fname` when constructing `BodyModel`.
+
+Where to find details
+- See tutorials/vposer.ipynb for concrete instructions, example paths, and usage. It shows how to load VPoser weights and SMPL-X models for sampling and IK examples.
+
 ## Tutorials
 ![alt text](support_data/latent_interpolation_1.gif "Interpolation of novel poses on the smoother VPoser latent space.")
 ![alt text](support_data/latent_interpolation_2.gif "Interpolation of novel poses on the smoother VPoser latent space.")
