@@ -137,3 +137,5 @@ secrets.*
 *.txt
 !requirements.txt
 *.obj
+
+!/assets/*

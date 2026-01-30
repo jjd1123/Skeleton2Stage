@@ -9,7 +9,7 @@ bash run.sh exp_name gpu_parallel_num epoch_num batch_size
 ```
 # Before evaluation, you should make sure 
 # you have the correct settings in metric computation scripts,
-# and models in "EDGE.py".
+# and models in Line 56 in "EDGE.py".
 bash eval.sh exp_name epoch_num motion_save_root ckpt_root cached_music_features
 ```
 ## Finetuning with your own base model and rewards
