@@ -2,17 +2,17 @@
 This code has the implementation of RLFT for diffusion models, an imitation reward, and other related rewards. Now it supports finetuning EDGE and POPDG, you can modify code to finetune your own base model with your rewards.
 
 ## Finetuning
-```
+```bash
 bash run.sh exp_name gpu_parallel_num epoch_num batch_size
 ```
 ## Evaluation
-```
+```bash
 # Before evaluation, you should make sure 
 # you have the correct settings in metric computation scripts,
 # and models in Line 56 in "EDGE.py".
 bash eval.sh exp_name epoch_num motion_save_root ckpt_root cached_music_features
 ```
 ## Finetuning with your own base model and rewards
-```
+```bash
 Coming soon!
 ```

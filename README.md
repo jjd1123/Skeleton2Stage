@@ -75,12 +75,12 @@ All evaluation is done using the mean SMPL body shape.
 To create the environment, follow the following instructions: 
 
 1. Clone the project:
-```
+```bash
 git clone https://github.com/jjd1123/Skeleton2Stage.git
 ```
 
 2. Create new conda environment and install pytroch:
-```
+```bash
 conda create -n isaac python=3.8
 pip install -r requirement.txt
 ```
@@ -109,12 +109,14 @@ Before evaluation, make sure you have:
 (1) the correct settings in metric computation scripts, and 
 
 (2) the correct model in Line 56 in [`EDGE.py`](code/rl_finetune/EDGE.py).
-```
+```bash
 cd code/rl_finetune
 bash eval.sh exp_name epoch_num motion_save_root ckpt_root cached_music_features
 ```
 ### Evaluation on Other Models
+```bash
 Coming soon!
+```
 
 ## Training
 
@@ -125,7 +127,15 @@ To fine-tune the generative model, you need the following:
 2. Conditioning data for training-time sampling;
 3. A checkpoint of the trained imitation policy.
 
-In this section, we provide preprocessed [data]() and pre-trained [checkpoints]() for a minimal example: finetuning EDGE on AIST++. We will also explain how to prepare your own datasets and pre-trained models below.
+In this section, we provide preprocessed [data]() and pre-trained [checkpoints]() for a minimal example: finetuning EDGE on AIST++. You can directly run following scripts:
+```bash
+# download EDGE checkpoint and the pretrained imitation policy.
+bash download_mode.sh
+# download preprocessed data of AIST++.
+bash download_data.sh
+``` 
+
+We will also explain how to prepare your own datasets and pre-trained models below.
 
 #### 1) Pretrain a base generative model
 You can follow the instructions from:
@@ -136,24 +146,31 @@ You can follow the instructions from:
 Follow the instructions in [Training Imitation Policy](#training-imitation-policy).
 
 #### 3) Prepare the conditioning data
+```bash
 Coming soon!
-
+```
  
 ### Training Imitation Policy
+```bash
 Coming soon!
+```
 ### RLFT for EDGE
 (1) Change the weight of different rewards in [`reward.yaml`](code/rl_finetune/reward.yaml).
 
 (2) Set the correct model for finetuning in Line 56 in [`EDGE.py`](code/rl_finetune/EDGE.py).
-```
+```bash
 cd code/rl_finetune
 bash run.sh exp_name gpu_parallel_num epoch_num batch_size
 ```
 ### RLFT for Other Models
+```bash
 Coming soon!
+```
 
 ## Rendering
+```bash
 Coming soon!
+```
 
 ## Trouble Shooting
 

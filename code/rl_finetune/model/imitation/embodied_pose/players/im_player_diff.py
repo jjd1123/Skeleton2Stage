@@ -1117,10 +1117,6 @@ class diff_player(ImitatorPlayer):
         # joint_position = joint_position.cpu().numpy()[...,mujoco_2_smpl,:]
         # if self.step ==0:
         #     self.get_results_from_rot(pose_aa_pred,root_trans_pred,gender_beta,motion_length_pred)
-        # TODO：这里假设每次只输入一个动作进行模仿，环境有128个，可以任意选择一个作为输出。
-        min_num = torch.argmin(reward.mean(dim=-1))
-        print(min_num)
-        # min_num = 0
         data_vec = torch.concatenate([contact,root_trans_pred[:,:constant_length],
                                     pose_6d_pred[:,:constant_length].reshape(B,constant_length,-1)],dim=-1)[:b]
 
