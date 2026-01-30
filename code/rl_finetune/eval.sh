@@ -26,7 +26,5 @@ for file_path in $file_paths; do
     python eval/eval_ba.py --motion_path $savepath
     python eval/eval_motioncritic.py --motion_path $savepath
     python get_obj.py --motion_path $savepath
-    cd ../../environment/torch-mesh-isect
-    python examples/detect_and_plot_collisions.py --motion_path $savepath
-    cd ../../code/rl_finetune
+    python eval/detect_and_plot_collisions.py --motion_path $savepath
 done

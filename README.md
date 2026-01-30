@@ -74,26 +74,31 @@ All evaluation is done using the mean SMPL body shape.
 
 To create the environment, follow the following instructions: 
 
-1. Create new conda environment and install pytroch:
+1. Clone the project:
+```
+git clone https://github.com/jjd1123/Skeleton2Stage.git
+```
 
-
+2. Create new conda environment and install pytroch:
 ```
 conda create -n isaac python=3.8
-conda install pytorch torchvision torchaudio pytorch-cuda=11.6 -c pytorch -c nvidia
 pip install -r requirement.txt
 ```
 
-2. Download and setup [Isaac Gym](https://developer.nvidia.com/isaac-gym). 
-
-3. This repository additionally depends on the following libraries, which may require special installation procedures:
-* [jukemirlib](https://github.com/rodrigo-castellon/jukemirlib)
-* [pytorch3d](https://github.com/facebookresearch/pytorch3d)
-* [accelerate](https://huggingface.co/docs/accelerate/v0.16.0/en/index)
-	* Note: after installation, don't forget to run `accelerate config` . We use fp16.
+3. Download and setup [Isaac Gym](https://developer.nvidia.com/isaac-gym). 
   
 4. Download the MuJoCo version 2.1 for [Linux](https://mujoco.org/download/mujoco210-linux-x86_64.tar.gz).
 
-5. Setup the PATH in [environment.sh](environment/environment.sh).
+5. Install [torch-mesh-isect](https://github.com/vchoutas/torch-mesh-isect) for body penetration rate evaluation.
+
+6. Configure your paths in [`environment.sh`](environment/environment.sh).  
+   For a cleaner project layout, you can place Isaac Gym, MuJoCo, and torch-mesh-isect under the [`environment/`](environment/) directory.
+
+7. This repository additionally depends on the following libraries, which may require special installation procedures:
+* [jukemirlib](https://github.com/rodrigo-castellon/jukemirlib)
+* [pytorch3d](https://github.com/facebookresearch/pytorch3d)
+* [accelerate](https://huggingface.co/docs/accelerate/v0.16.0/en/index)
+  * Note: after installation, don't forget to run `accelerate config` . We use fp16.
 
 
 ## Evaluation
@@ -103,7 +108,7 @@ Before evaluation, make sure you have:
 
 (1) the correct settings in metric computation scripts, and 
 
-(2) the correct model in Line 56 in [EDGE.py](code/rl_finetune/EDGE.py).
+(2) the correct model in Line 56 in [`EDGE.py`](code/rl_finetune/EDGE.py).
 ```
 cd code/rl_finetune
 bash eval.sh exp_name epoch_num motion_save_root ckpt_root cached_music_features
@@ -137,9 +142,9 @@ Coming soon!
 ### Training Imitation Policy
 Coming soon!
 ### RLFT for EDGE
-(1) Change the weight of different rewards in [reward.yaml](code/rl_finetune/reward.yaml).
+(1) Change the weight of different rewards in [`reward.yaml`](code/rl_finetune/reward.yaml).
 
-(2) Set the correct model for finetuning in Line 56 in [EDGE.py](code/rl_finetune/EDGE.py).
+(2) Set the correct model for finetuning in Line 56 in [`EDGE.py`](code/rl_finetune/EDGE.py).
 ```
 cd code/rl_finetune
 bash run.sh exp_name gpu_parallel_num epoch_num batch_size
