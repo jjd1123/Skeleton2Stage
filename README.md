@@ -3,6 +3,7 @@
 
 <div align="center">
 <a href=""><img src='https://img.shields.io/badge/arXiv-.svg'></a> &nbsp;
+<a href="https://jjd1123.github.io/Skeleton2Stage/"><img src='https://img.shields.io/badge/Project-Skeleton2Stage-brightgreen.svg'></a> &nbsp;
 
 Jidong Jia,
 Youjian Zhang,
