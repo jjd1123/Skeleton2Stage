@@ -1,0 +1,1 @@
+../../../../pretrain/vid2player3d/embodied_pose/MDM/imitation/human_body_prior/requirements.txt

@@ -4,3 +4,7 @@
 !/results
 !/data
 !data/**/*
+!requirements.txt
+!/human_body_prior/support_data/dowloads/amass_sample.npz
+!/human_body_prior/tests/samples/body_pose_rnd.npz
+!/human_body_prior/src/human_body_prior/body_model/parts_segm/smplh/parts_segm.pkl

@@ -23,3 +23,5 @@ MDMCritic/body_models/
 MDMCritic/wandb/
 requirements.txt
 
+!/MDMCritic/data_loaders/humanml/data
+!/MotionCritic/lib

@@ -139,3 +139,6 @@ secrets.*
 *.obj
 
 !/assets/*
+/environment/isaacgym
+/environment/mujoco210
+/environment/torch-mesh-isect
