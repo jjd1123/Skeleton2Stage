@@ -1,0 +1,6 @@
+outs:
+- md5: 6c05ff3d97cca20a9f0952255479483a.dir
+  size: 208929483
+  nfiles: 1
+  hash: md5
+  path: sep_vqvae

@@ -1,0 +1,6 @@
+outs:
+- md5: 86d80b3afc8d7e504b740a77c6ee0db1.dir
+  size: 31057720
+  nfiles: 40
+  hash: md5
+  path: fact

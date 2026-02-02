@@ -1,0 +1,6 @@
+outs:
+- md5: aa18b07902cfea7603222e2a1d172179.dir
+  size: 8784202
+  nfiles: 52
+  hash: md5
+  path: mujoco210

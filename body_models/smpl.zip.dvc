@@ -1,0 +1,5 @@
+outs:
+- md5: 5adaff971f32a0a939dcaf244338b8ae
+  size: 255490095
+  hash: md5
+  path: smpl.zip

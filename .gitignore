@@ -142,3 +142,6 @@ secrets.*
 /environment/isaacgym
 /environment/mujoco210
 /environment/torch-mesh-isect
+!/code/rl_finetune/data/
+!/code/rl_finetune/model/POPDG/data/
+!/code/rl_finetune/model/imitation/results/

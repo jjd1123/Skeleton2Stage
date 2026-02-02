@@ -7,20 +7,18 @@ __pycache__/
 # EDGE
 # EDGE/data
 /data/test/
-/data/train/*
+/data/train/
 /data/edge_aistpp/
 /data/dataset_backups/
 /data/sliced_motion
-/data/train_rl/*
-/data/train_rl_aist/*
+/data/train_rl/
+/data/train_rl_aist/
 /data/test_data
 /data/splits
 !/data/
 # EDGE/eval
-eval/*
-!eval/*.py
-!eval/features
-!eval/MotionCritic
+/eval/bailando
+/eval/fact
 # EDGE/model
 # EDGE/model/imitation
 /model/imitation/results
@@ -218,3 +216,4 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+/music

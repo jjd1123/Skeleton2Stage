@@ -1,0 +1,6 @@
+outs:
+- md5: 8d3ecdd4f3fac37562c0282a09e5dd12.dir
+  size: 280071601
+  nfiles: 845
+  hash: md5
+  path: torch-mesh-isect

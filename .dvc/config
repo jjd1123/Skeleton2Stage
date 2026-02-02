@@ -1,0 +1,4 @@
+[core]
+    remote = skeleton2stage_data
+['remote "skeleton2stage_data"']
+    url = ../../Skeleton2Stage_Data

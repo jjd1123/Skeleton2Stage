@@ -1,0 +1,5 @@
+outs:
+- md5: d0b14f5bc41139b0218163f15885fbb4
+  size: 273673513
+  hash: md5
+  path: motioncritic_pre.pth
