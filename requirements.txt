@@ -112,11 +112,13 @@ pure_eval==0.2.3
 pydantic==2.10.6
 pydantic_core==2.27.2
 pyecharts==2.0.8
+pyglet==1.5.27
 Pygments==2.19.2
 pynvml==11.5.3
 pyparsing==3.1.4
 python-dateutil==2.9.0.post0
 python-utils==3.8.2
+pyvista==0.34.2
 pyzmq==27.1.0
 ray==2.10.0
 referencing==0.35.1
@@ -154,7 +156,7 @@ trimesh==4.7.1
 triton==3.0.0
 urllib3==1.26.20
 vedo==2025.5.4
-vtk==9.5.0
+vtk==9.1.0
 wandb==0.21.0
 wcwidth==0.2.13
 webencodings==0.5.1

@@ -114,6 +114,7 @@ params:
   load_checkpoint: False
 
   config:
+    pretrained_model_cp: results/amass_im_pretrain/models/Humanoid_latest.pth
     name: Humanoid
     env_name: rlgpu
     multi_gpu: False

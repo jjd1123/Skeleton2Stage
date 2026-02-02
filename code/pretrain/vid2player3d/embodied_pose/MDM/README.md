@@ -1,3 +1,4 @@
+# This is a modified version of MDM for MDM+motion projection, you can setup the MDM following this README.
 # MDM: Human Motion Diffusion Model
 
 

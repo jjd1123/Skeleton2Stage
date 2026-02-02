@@ -1,0 +1,1 @@
+../code/pretrain/vid2player3d/embodied_pose/MDM/prepare/download_smpl_files.sh

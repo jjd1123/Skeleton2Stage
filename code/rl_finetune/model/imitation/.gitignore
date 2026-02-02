@@ -2,3 +2,5 @@
 !/embodied_pose/env
 !/human_body_prior/src/human_body_prior/data
 !/results
+!/data
+!data/**/*

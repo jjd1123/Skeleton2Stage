@@ -1,4 +1,9 @@
 # This is a modified version of vid2player3d
+## Enabled Features
+- [Data Preparation](#data-preparation): Provides tools to prepare training data from the AMASS, AIST++, and PopDanceSet datasets.
+- Collision Checks: Enables collision checks on SMPL-based characters.
+- [Training](#low-level-policy) an imitation policy on self-defined expert datasets to control a SMPL-based character.
+- [MDM+physics-based motion projection](#mdmphysics-based-motion-projection-demo).
 # Learning Physically Simulated Tennis Skills from Broadcast Videos
 
 <strong>Haotian zhang</strong>, Ye Yuan, Viktor Makoviychuk, Yunrong Guo, Sanja Fidler, Xue Bin Peng, Kayvon Fatahalian
@@ -18,7 +23,7 @@ SIGGRAPH 2023 (best paper honorable mention)
 
 [2023/11/01] Demo code for the hierarchical controller is released.
 
-# Environment setup
+# Environment setup (You can directly skip the first two steps if you have setup the enironment following the guidance in the main [README](../../../README.md).)
 
 ### 1. Download IsaacGym and create python virtual env
 You can download IsaacGym Preview Release 4 from the official [site](https://developer.nvidia.com/isaac-gym).
@@ -53,53 +58,22 @@ Download SMPL by first registering [here](https://smpl.is.tue.mpg.de/login.php) 
 
 For training the low-level policy, also copy the smpl model files into `vid2player3d/data/smpl`.
 
-# Demo
-These demos require trained models which are currently unavailable.
-### Single player
-In the single player setting, the player will react to consecutive incoming tennis balls from the other side.
-The script below runs the simulation and renders the result online. The simulation will be reset after 300 frames. You can change the player by chaning`--cfg` to `djokovic` or `nadal`. 
-```
-python vid2player/run.py --cfg federer --rl_device cuda:0 --test --num_envs 1 --episode_length 300 --seed 0 --checkpoint latest --enable_shadow
-```
-
-The script below will run the simulations in batch and render the result videos offline and saved into `out/video`. You can also change `--record` to `--record_scenepic`, which will save the result into an interactive html file under `out/html`. Note that the saved html file is large and may take seconds to load.
-```
-python vid2player/run.py --cfg federer --rl_device cuda:0 --test --num_envs 8192 --episode_length 300 --seed 0 --checkpoint latest --select_best --enable_shadow --num_rec_frames 300 --num_eg 5 --record --headless
-```
-
-### Dual player
-In the dual player setting, the two players will play tennis rally against each other.
-The script below runs the simulation and renders the result online. The simulation will be reset if the ball is missed or out. You can change the players by changing `--cfg` to `nadal_djokovic`. More player settings will be added soon. 
-```
-python vid2player/run.py --cfg federer_djokovic --rl_device cuda:0 --test --num_envs 2 --episode_length 10000 --seed 0 --checkpoint latest --enable_shadow
-```
-
-The script below will run the simulations in batch and render the result videos offline and saved into `out/video`.
-```
-python vid2player/run.py --cfg federer_djokovic --rl_device cuda:0 --test --num_envs 8192 --episode_length 10000 --seed 0 --checkpoint latest --enable_shadow --headless --num_rec_frames 600 --num_eg 5 --record
-```
-
 # Training
 
 ### Low-level policy
-We provide the code for training the low-level policy in [embodied_pose](embodied_pose). As described in the paper, the low-level policy is trained in two stages using AMASS motions and tennis motions. You can run the following script to execute the two-stage training (assuming the motion data are available).
+We provide the code for training the low-level policy in [embodied_pose](embodied_pose). Here we provide an example, the low-level policy is trained in two stages using AMASS motions and AIST++ motions. You can run the following script to execute the two-stage training (assuming the motion data are available).
 ```
-python embodied_pose/run.py --cfg amass_im --rl_device cuda:0 --headless
-python embodied_pose/run.py --cfg djokovic_im --rl_device cuda:0 --headless
+bash train.sh
 ```
-[convert_amass_isaac.py](uhc/utils/convert_amass_isaac.py) shows how to convert the AMASS motion dataset into the format that can be used for our training code.
+<a id="data-preparation"></a>
+[convert_amass_isaac.py](uhc/utils/convert_amass_isaac.py) shows how to convert the AMASS motion dataset into the format that can be used for our training code. **We further show how to convert AIST++ and PopDanceSet into the format that can be used for our training code under the same [folder](uhc/utils/).**
 
-### Motion embedding
-We provide code for training the motion embedding in [vid2player/motion_vae](vid2player/motion_vae/) (assuming the motion data is organized in the format described in [Video3DPoseDataset](vid2player/motion_vae/dataset.py)).
+# MDM+physics-based motion projection demo
 
-### High-level policy
-We also provide code for training the high-level policy in [vid2player](vid2player). As described in the paper, we design a curriculum trained in three stages. You can run the following script to execute the curriculum training (assuming the checkpoints for the low-leve policy and motion embedding are available).
+Following the guidance in [MDM](embodied_pose/MDM/README.md) for setup, and then run:
 ```
-python vid2player/run.py --cfg federer_train_stage_1 --rl_device cuda:0 --headless
-python vid2player/run.py --cfg federer_train_stage_2 --rl_device cuda:0 --headless
-python vid2player/run.py --cfg federer_train_stage_3 --rl_device cuda:0 --headless
+bash run.sh
 ```
-
 
 # Citation
 ```

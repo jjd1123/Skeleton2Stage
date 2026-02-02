@@ -42,6 +42,8 @@ Official implementation of paper: "Skeleton2Stage: Reward-Guided Fine-Tuning for
 
 ## News
 
+[Febrary 2, 2026] Training code for imitation policy released.
+
 [January 30, 2026] Training and Evaluation code for EDGE released.
 
 ## TODOs
@@ -50,7 +52,7 @@ Official implementation of paper: "Skeleton2Stage: Reward-Guided Fine-Tuning for
 
 - [x] Installation guidance
 
-- [ ] Release training imitation policy code.
+- [x] Release training imitation policy code.
 
 - [x] Release training code. 
 
@@ -65,6 +67,12 @@ We identify and address a critical yet often-overlooked gap between skeleton-bas
 
 ### Docs 
 
+- [Docs on training imitation policy](code/pretrain/vid2player3d/README.md)
+
+- [Docs on RLFT pipeline](code/rl_finetune/README.md)
+
+- [Docs on MDM+physics-based motion projection](code/pretrain/vid2player3d/embodied_pose/MDM/README.md)
+
 ### Current Results on EDGE
 
 All evaluation is done using the mean SMPL body shape.
@@ -76,15 +84,15 @@ All evaluation is done using the mean SMPL body shape.
 To create the environment, follow the following instructions: 
 
 1. Clone the project:
-```bash
-git clone https://github.com/jjd1123/Skeleton2Stage.git
-```
+    ```bash
+    git clone https://github.com/jjd1123/Skeleton2Stage.git
+    ```
 
 2. Create new conda environment and install pytroch:
-```bash
-conda create -n isaac python=3.8
-pip install -r requirement.txt
-```
+    ```bash
+    conda create -n isaac python=3.8
+    pip install -r requirement.txt
+    ```
 
 3. Download and setup [Isaac Gym](https://developer.nvidia.com/isaac-gym). 
   
@@ -101,6 +109,37 @@ pip install -r requirement.txt
 * [accelerate](https://huggingface.co/docs/accelerate/v0.16.0/en/index)
   * Note: after installation, don't forget to run `accelerate config` . We use fp16.
 
+8. Place the smpl files under [`body_models/`](body_models) like following,
+
+    ```bash
+    body_models/
+    ├── README.md            # This guide file
+    │
+    ├── smpl/
+    │   ├── J_regressor_extra.npy
+    │   ├── kintree_table.pkl
+    │   ├── smplfaces.npy
+    │   ├── SMPL_FEMALE.pkl
+    │   ├── SMPL_MALE.pkl
+    │   └── SMPL_NEUTRAL.pkl
+    │
+    ├── smplh/
+    │   ├── female/
+    │   │   └── model.npz
+    │   ├── male/
+    │   │   └── model.npz
+    │   └── neutral/
+    │       └── model.npz
+    │
+    └── smplx/
+        ├── female/
+        │   └── model.npz
+        ├── male/
+        │   └── model.npz
+        └── neutral/
+            └── model.npz
+    ```
+
 
 ## Evaluation
 
@@ -110,6 +149,7 @@ Before evaluation, make sure you have:
 (1) the correct settings in metric computation scripts, and 
 
 (2) the correct model in Line 56 in [`EDGE.py`](code/rl_finetune/EDGE.py).
+
 ```bash
 cd code/rl_finetune
 bash eval.sh exp_name epoch_num motion_save_root ckpt_root cached_music_features
@@ -130,6 +170,7 @@ To fine-tune the generative model, you need the following:
 
 In this section, we provide preprocessed [data]() and pre-trained [checkpoints]() for a minimal example: finetuning EDGE on AIST++. You can directly run following scripts:
 ```bash
+cd code/rl_finetune
 # download EDGE checkpoint and the pretrained imitation policy.
 bash download_mode.sh
 # download preprocessed data of AIST++.
@@ -152,9 +193,19 @@ Coming soon!
 ```
  
 ### Training Imitation Policy
-```bash
-Coming soon!
-```
+1. Prepare the Expert Dataset
+
+    First, prepare the expert dataset for imitation policy training by following the guide in the [Vid2player3d README](code/pretrain/vid2player3d/README.md). 
+
+2. Run the Training Script
+    
+    Once the dataset is ready, start the training by executing the `train.sh` script.
+    ```bash
+    cd code/pretrain/vid2player3d
+    bash train.sh PATH_TO_VID2PLAYER3D
+    ```
+
+    - Customization: You can modify the training strategy by changing the configuration file and the execution order within `train.sh`.
 ### RLFT for EDGE
 (1) Change the weight of different rewards in [`reward.yaml`](code/rl_finetune/reward.yaml).
 
