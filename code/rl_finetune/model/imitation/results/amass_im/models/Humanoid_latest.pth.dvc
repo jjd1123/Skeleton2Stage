@@ -1,0 +1,5 @@
+outs:
+- md5: 7aed8f3e9e224a34a4ed5f83e3c5d27e
+  size: 56349214
+  hash: md5
+  path: Humanoid_latest.pth

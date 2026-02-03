@@ -486,14 +486,15 @@ class EDGE:
         test_tensor_dataset_path = os.path.join(
             opt.processed_data_dir, f"test_tensor_dataset.pkl"
         )
-
+        # During training, we don't use test dataset, so we comment them out. 
+        # If you want to do visualization during training, you can follow the guidance in EDGE  
         if (
             not opt.no_cache
             and os.path.isfile(train_tensor_dataset_path)
             and os.path.isfile(test_tensor_dataset_path)
         ):
             train_dataset = pickle.load(open(train_tensor_dataset_path, "rb"))
-            test_dataset = pickle.load(open(test_tensor_dataset_path, "rb"))
+            # test_dataset = pickle.load(open(test_tensor_dataset_path, "rb"))
         else:
             train_dataset = AISTPPDataset(
                 data_path=opt.data_path,
@@ -501,7 +502,7 @@ class EDGE:
                 train=True,
                 force_reload=opt.force_reload,
             )
-            test_dataset = pickle.load(open(test_tensor_dataset_path, "rb"))
+            # test_dataset = pickle.load(open(test_tensor_dataset_path, "rb"))
             # test_dataset = AISTPPDataset(
             #     data_path=opt.data_path,
             #     backup_path=opt.processed_data_dir,
@@ -519,8 +520,10 @@ class EDGE:
         train_dataset.generate_idx()
         # set normalizer
         if self.normalizer == None:
+            # print("Using test dataset normalizer!!!")
+            # self.normalizer = test_dataset.normalizer
             print("Using test dataset normalizer!!!")
-            self.normalizer = test_dataset.normalizer
+            self.normalizer = train_dataset.normalizer
         
         # set reward tracker
         stat_tracker = PerPromptStatTracker(32 ,16) # track for imitation reward

@@ -1,0 +1,6 @@
+outs:
+- md5: f6eabff74fb2a86ad61055a4cc61f172.dir
+  size: 56348869
+  nfiles: 1
+  hash: md5
+  path: edge_im

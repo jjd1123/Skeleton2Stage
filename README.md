@@ -168,14 +168,15 @@ To fine-tune the generative model, you need the following:
 2. Conditioning data for training-time sampling;
 3. A checkpoint of the trained imitation policy.
 
-In this section, we provide preprocessed [data]() and pre-trained [checkpoints]() for a minimal example: finetuning EDGE on AIST++. You can directly run following scripts:
+In this section, we provide [data](https://drive.google.com/file/d/1y-4fZnxekzd5UVEpnPj95ksORIcDq38z/view?usp=sharing) (preprocessed data and the pretrained imitation policy) for a minimal example: finetuning EDGE on AIST++. You can directly run following scripts:
 ```bash
 cd code/rl_finetune
-# download EDGE checkpoint and the pretrained imitation policy.
+# download EDGE checkpoint.
 bash download_mode.sh
-# download preprocessed data of AIST++.
+# download preprocessed data of AIST++ and the pretrained imitation policy.
 bash download_data.sh
 ``` 
+- Note: We use DVC for dataset version control. Please follow the README in the downloaded data directory for a quick setup.
 
 We will also explain how to prepare your own datasets and pre-trained models below.
 

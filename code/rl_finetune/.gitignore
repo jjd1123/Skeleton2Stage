@@ -21,7 +21,9 @@ __pycache__/
 /eval/fact
 # EDGE/model
 # EDGE/model/imitation
-/model/imitation/results
+/model/imitation/results/*
+!/model/imitation/results/*.dvc
+!/model/imitation/results/.gitignore
 # folder in project root
 /aist_juke_feats/
 /image/
