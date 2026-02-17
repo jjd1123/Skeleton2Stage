@@ -2,7 +2,7 @@
 
 
 <div align="center">
-<a href=""><img src='https://img.shields.io/badge/arXiv-.svg'></a> &nbsp;
+<a href="https://arxiv.org/abs/2602.13778"><img src='https://img.shields.io/badge/arXiv-2602.13778-b31b1b.svg'></a> &nbsp;
 <a href="https://jjd1123.github.io/Skeleton2Stage/"><img src='https://img.shields.io/badge/Project-Skeleton2Stage-brightgreen.svg'></a> &nbsp;
 
 Jidong Jia,
@@ -233,7 +233,15 @@ Coming soon!
 ## Citation
 If you find this work useful for your research, please cite our paper:
 ```
-   
+@misc{jia2026skeleton2stagerewardguidedfinetuningphysically,
+      title={Skeleton2Stage: Reward-Guided Fine-Tuning for Physically Plausible Dance Generation}, 
+      author={Jidong Jia and Youjian Zhang and Huan Fu and Dacheng Tao},
+      year={2026},
+      eprint={2602.13778},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2602.13778}, 
+}   
 ```
 
 
