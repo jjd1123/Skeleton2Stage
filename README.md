@@ -16,11 +16,11 @@ Shanghai Jiao Tong University
 ## Abstract
 Official implementation of the paper **"Skeleton2Stage: Reward-Guided Fine-Tuning for Physically Plausible Dance Generation."**
 
-Existing dance generation models typically operate on sparse skeletons and often overlook the geometric constraints of the human body. As a result, generated motions may exhibit artifacts such as body interpenetration and unstable foot-ground contact when visualized with full-body meshes.
+Existing dance generation models typically operate on sparse skeletons and often overlook the geometric constraints of the human body, leading to artifacts such as body interpenetration and unstable foot-ground contact when visualized with full-body meshes.
 
-In this work, we identify a critical gap between skeleton-level motion generation and mesh-level body visualization, which we refer to as the **skeleton-to-mesh gap**. To bridge this gap, we leverage a physics-based humanoid controller as a **physical plausibility evaluator** and distill simulator-derived physical priors into motion diffusion models through reward-guided fine-tuning, together with several complementary heuristic rewards.
+In this work, we identify this critical gap between skeleton-level motion generation and mesh-level body visualization, which we refer to as the **skeleton-to-mesh gap**. To bridge this gap, we propose Skeleton2Stage to distill the physics-based motion priors from the physics simulator and heuristic constraints into the generative models via a reward-guided fine-tuning framework. 
 
-Our approach encourages the generative model to internalize physics-based motion priors, enabling it to produce motions that remain physically plausible when visualized with human body meshes.
+Experiments show that Skeleton2Stage improves the physical plausibility of generated dances and reduces common artifacts when visualized with full-body meshes.
 
 ![method](assets/method.png)
 
@@ -73,9 +73,7 @@ Skeleton2Stage is a framework that improves the physical plausibility of diffusi
 
 Most existing dance generation models operate purely in skeleton space. However, when the generated motions are visualized with full-body meshes, they often violate geometric constraints of the human body, resulting in artifacts such as body interpenetration and unstable foot-ground contact.
 
-To address this problem, Skeleton2Stage leverages a physics-based humanoid controller as a **physical plausibility evaluator**. The evaluator provides feedback on whether generated motions satisfy physical constraints, and this feedback is incorporated into the training process through reward-guided fine-tuning.
-
-In addition to the imitation reward derived from the physics-based controller, we introduce complementary heuristic physics rewards to further mitigate common artifacts such as foot-ground penetration and freezing motions. Through this process, the diffusion model gradually internalizes physics-based motion priors and produces more physically plausible dance motions.
+To address this problem, Skeleton2Stage leverages a physics-based humanoid controller as a **physical plausibility evaluator**. The evaluator provides feedback on whether generated motions satisfy physical constraints, especially those arising from human body geometry. Together with complementary reward signals, this feedback guides reinforcement learning fine-tuning and encourages the generative model to internalize physics-aware motion priors, producing motions that remain physically plausible when visualized on a human body mesh.
 
 ### Docs 
 
