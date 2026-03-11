@@ -73,7 +73,7 @@ Skeleton2Stage is a framework that improves the physical plausibility of diffusi
 
 Most existing dance generation models operate purely in skeleton space. However, when the generated motions are visualized with full-body meshes, they often violate geometric constraints of the human body, resulting in artifacts such as body interpenetration and unstable foot-ground contact.
 
-To address this problem, Skeleton2Stage leverages a physics-based humanoid controller as a **physical plausibility evaluator**. The evaluator provides feedback on whether generated motions satisfy physical constraints, especially those arising from human body geometry. Together with complementary reward signals, this feedback guides reinforcement learning fine-tuning and encourages the generative model to internalize physics-aware motion priors, producing motions that remain physically plausible when visualized with a human body mesh.
+To address this problem, Skeleton2Stage leverages a physics-based humanoid controller as a **physical plausibility evaluator**. The evaluator provides feedback on whether generated motions satisfy physical constraints, especially those arising from human body geometry. Together with complementary reward signals, this feedback encourages the generative model to internalize physics-aware motion priors via RLFT, producing motions that remain physically plausible when visualized with a human body mesh.
 
 ### Docs 
 
