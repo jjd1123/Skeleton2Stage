@@ -8,7 +8,7 @@
   <!-- TODO: Replace with your paper title and author names -->
   <meta name="title" content="Skeleton2Stage: Reward-Guided Fine-Tuning for Physically Plausible Dance Generation - Jidong Jia, Youjian Zhang, Huan Fu, Dacheng Tao">
   <!-- TODO: Write a compelling 150-160 character description of your research -->
-  <meta name="description" content="We propose Skeleton2Stage, which bridges the gap between skeletal structure and human body meshes, enabling generative models to produce physically plausible dances when visualized with a human body mesh.">
+  <meta name="description" content="We propose Skeleton2Stage, which bridges the gap between skeleton-level motion generation and mesh-level body visualization, enabling generative models to produce physically plausible dances when visualized with full-body meshes.">
   <!-- TODO: Add 5-10 relevant keywords for your research area -->
   <meta name="keywords" content="Dance generation, Reinforcement learning, Physical simulation">
   <!-- TODO: List all authors -->
@@ -23,7 +23,7 @@
   <!-- TODO: Same as paper title above -->
   <meta property="og:title" content="Skeleton2Stage: Reward-Guided Fine-Tuning for Physically Plausible Dance Generation">
   <!-- TODO: Same as description above -->
-  <meta property="og:description" content="We propose Skeleton2Stage, which bridges the gap between skeletal structure and human body meshes, enabling generative models to produce physically plausible dances when visualized with a human body mesh.">
+  <meta property="og:description" content="We propose Skeleton2Stage, which bridges the gap between skeleton-level motion generation and mesh-level body visualization, enabling generative models to produce physically plausible dances when visualized with full-body meshes.">
   <!-- TODO: Replace with your actual website URL -->
   <meta property="og:url" content="https://jjd1123.github.io/Skeleton2Stage/">
   <!-- TODO: Create a 1200x630px preview image and update path -->
@@ -43,7 +43,7 @@
   <!-- TODO: Same as paper title above -->
   <meta name="twitter:title" content="Skeleton2Stage: Reward-Guided Fine-Tuning for Physically Plausible Dance Generation">
   <!-- TODO: Same as description above -->
-  <meta name="twitter:description" content="We propose Skeleton2Stage, which bridges the gap between skeletal structure and human body meshes, enabling generative models to produce physically plausible dances when visualized with a human body mesh.">
+  <meta name="twitter:description" content="We propose Skeleton2Stage, which bridges the gap between skeleton-level motion generation and mesh-level body visualization, enabling generative models to produce physically plausible dances when visualized with full-body meshes.">
   <!-- TODO: Same as social preview image above -->
   <meta name="twitter:image" content="https://raw.githubusercontent.com/jjd1123/Skeleton2Stage/main/assets/method.png">
   <meta name="twitter:image:alt" content="Skeleton2Stage: Reward-Guided Fine-Tuning for Physically Plausible Dance Generation - Research Preview">
@@ -114,7 +114,7 @@
     "@context": "https://schema.org",
     "@type": "ScholarlyArticle",
     "headline": "Skeleton2Stage: Reward-Guided Fine-Tuning for Physically Plausible Dance Generation",
-    "description": "We propose Skeleton2Stage, which bridges the gap between skeletal structure and human body meshes, enabling generative models to produce physically plausible dances when visualized with a human body mesh.",
+    "description": "We propose Skeleton2Stage, which bridges the gap between skeleton-level motion generation and mesh-level body visualization, enabling generative models to produce physically plausible dances when visualized with full-body meshes.",
     "author": [
       {
         "@type": "Person",
@@ -131,7 +131,7 @@
           "@type": "Organization",
           "name": "Bosch"
         }
-      }
+      },
       {
         "@type": "Person",
         "name": "Huan Fu",
@@ -139,7 +139,7 @@
           "@type": "Organization",
           "name": "Youku, Alibaba"
         }
-      }
+      },
       {
         "@type": "Person",
         "name": "Dacheng Tao",
@@ -339,10 +339,19 @@
         <!-- TODO: Add your video file path here -->
         <source src="https://tpami-demo.s3.us-east-2.amazonaws.com/Skeleton2Stage_demo_v1.mp4" type="video/mp4">
       </video>
+      <div class="tldr-box">
+        <p class="tldr-label">TL;DR</p>
+        <p class="tldr-text">
+          <strong>Skeleton2Stage</strong> bridges the critical yet often overlooked <strong>skeleton-to-mesh gap</strong> by distilling physics-based motion priors into dance generation models through reward-guided fine-tuning.
+        </p>
+        <p class="tldr-text">
+            It reduces artifacts such as <strong>body interpenetration</strong> and <strong>foot-ground artifacts</strong> under full-body mesh visualization.
+        </p>
+      </div>
       <!-- TODO: Replace with your video description -->
-      <h2 class="subtitle has-text-centered">
-        We propose <strong>Skeleton2Stage</strong>, which bridges the gap between skeletal structure and human body meshes, enabling generative models to produce physically plausible dances when visualized with a human body mesh.
-      </h2>
+      <!-- <h2 class="subtitle has-text-centered">
+        We propose <strong>Skeleton2Stage</strong>, which bridges the gap between skeleton-level motion generation and mesh-level body visualization, enabling generative models to produce physically plausible dances when visualized with full-body meshes.
+      </h2> -->
     </div>
   </div>
 </section>
@@ -372,34 +381,37 @@
   <div class="hero-body">
     <div class="container">
       <h2 class="title is-3">Results</h2>
+      <p class="has-text-centered results-intro">
+        We evaluate Skeleton2Stage from both qualitative and quantitative perspectives, with a focus on <strong>mesh-level physical plausibility</strong>, aesthetic quality, and motion-condition consistency across different motion generation models and datasets.
+      </p>
       <div id="results-carousel" class="carousel results-carousel">
-       <div class="item">
+      <div class="item">
         <!-- TODO: Replace with your research result images -->
         <img src="static/images/visual.png" alt="First research result visualization" loading="lazy"/>
         <!-- TODO: Replace with description of this result -->
         <h2 class="subtitle has-text-centered">
-          Visulization Results on EDGE.
+          Qualitative Results on EDGE
         </h2>
       </div>
       <div class="item">
         <!-- Your image here -->
         <img src="static/images/experimetnal_results.png" alt="Second research result visualization" loading="lazy"/>
         <h2 class="subtitle has-text-centered">
-          Experimental Results.
+          Quantitative Results
         </h2>
       </div>
       <div class="item">
         <img src="static/images/ablation.png" alt="Third research result visualization" loading="lazy"/>
         <h2 class="subtitle has-text-centered">
-         Visualization Results of the Ablation Studies. 
-       </h2>
-     </div>
-     <div class="item">
+          Ablation Study
+        </h2>
+      </div>
+      <div class="item">
       <img src="static/images/generality.png" alt="Fourth research result visualization" loading="lazy"/>
       <h2 class="subtitle has-text-centered">
-        Generality of Our Method.
+        Generality of Skeleton2Stage Across Models and Datasets
       </h2>
-    </div>
+      </div>
   </div>
 </div>
 </div>
