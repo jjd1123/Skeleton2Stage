@@ -2,9 +2,7 @@
 
 ## Introduction
 
-We complete all our annotation on an annotation platform.
-
-![Annotation platform](annotation.png)
+We complete all our annotation on an annotation platform. The original screenshot asset is not included in this repository, so this document focuses on the data format and preparation steps below.
 
 ## Steps for Reorganization and Dataset Preparation
 

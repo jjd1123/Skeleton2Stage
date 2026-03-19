@@ -1,6 +1,6 @@
 # VPoser: Variational Human Pose Prior for Body Inverse Kinematics
 
-![alt text](support_data/vposer_samples.png "Novel Human Poses Sampled From the VPoser.")
+![alt text](https://raw.githubusercontent.com/nghorbani/human_body_prior/master/support_data/vposer_samples.png "Novel Human Poses Sampled From the VPoser.")
 ## Description
 The articulated 3D pose of the human body is high-dimensional and complex. 
 Many applications make use of a prior distribution over valid human poses, but modeling this distribution is difficult.
@@ -51,14 +51,14 @@ Where to find details
 - See tutorials/vposer.ipynb for concrete instructions, example paths, and usage. It shows how to load VPoser weights and SMPL-X models for sampling and IK examples.
 
 ## Tutorials
-![alt text](support_data/latent_interpolation_1.gif "Interpolation of novel poses on the smoother VPoser latent space.")
-![alt text](support_data/latent_interpolation_2.gif "Interpolation of novel poses on the smoother VPoser latent space.")
+![alt text](https://raw.githubusercontent.com/nghorbani/human_body_prior/master/support_data/latent_interpolation_1.gif "Interpolation of novel poses on the smoother VPoser latent space.")
+![alt text](https://raw.githubusercontent.com/nghorbani/human_body_prior/master/support_data/latent_interpolation_2.gif "Interpolation of novel poses on the smoother VPoser latent space.")
 
 * [VPoser Body poZ Space for SMPL Body Model Family](tutorials/vposer.ipynb)
 * [Sampling Novel Body Poses with VPoser](tutorials/vposer_sampling.ipynb)
 
 ## Advanced IK Capabilities
-![alt text](support_data/SMPL_inverse_kinematics.gif "Batched SMPL Inverse Kinematics With Learned Body Prior")
+![alt text](https://raw.githubusercontent.com/nghorbani/human_body_prior/master/support_data/SMPL_inverse_kinematics.gif "Batched SMPL Inverse Kinematics With Learned Body Prior")
 
 Given position of some key points one can find the necessary body joints' rotation configurations via inverse kinematics (IK). 
 The keypoints could either be 3D (joint locations, 3D mocap markers on body surface) or 2D (as in [SMPLify-X](https://smpl-x.is.tue.mpg.de/)).
