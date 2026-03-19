@@ -48,13 +48,13 @@ Experiments show that Skeleton2Stage improves the physical plausibility of gener
 
 ## News
 
-[Febrary 2, 2026] Training code for imitation policy released.
+[February 2, 2026] Training code for imitation policy released.
 
 [January 30, 2026] Training and Evaluation code for EDGE released.
 
 ## TODOs
 
-- [ ] Supports for training on GPU newer than A100.
+- [ ] Support training on GPUs newer than A100.
 
 - [x] Installation guidance
 
@@ -91,17 +91,17 @@ All evaluation is done using the mean SMPL body shape.
 
 ### Installation
 
-To create the environment, follow the following instructions: 
+To create the environment, follow these instructions:
 
 1. Clone the project:
     ```bash
     git clone https://github.com/jjd1123/Skeleton2Stage.git
     ```
 
-2. Create new conda environment and install pytroch:
+2. Create a new conda environment and install PyTorch:
     ```bash
     conda create -n isaac python=3.8
-    pip install -r requirement.txt
+    pip install -r requirements.txt
     ```
 
 3. Download and setup [Isaac Gym](https://developer.nvidia.com/isaac-gym). 
@@ -117,9 +117,9 @@ To create the environment, follow the following instructions:
 * [jukemirlib](https://github.com/rodrigo-castellon/jukemirlib)
 * [pytorch3d](https://github.com/facebookresearch/pytorch3d)
 * [accelerate](https://huggingface.co/docs/accelerate/v0.16.0/en/index)
-  * Note: after installation, don't forget to run `accelerate config` . We use fp16.
+  * Note: after installation, don't forget to run `accelerate config`. We use fp16.
 
-8. Place the smpl files under [`body_models/`](body_models) like following,
+8. Place the SMPL files under [`body_models/`](body_models) as follows:
 
     ```bash
     body_models/
@@ -181,8 +181,8 @@ To fine-tune the generative model, you need the following:
 In this section, we provide [data](https://drive.google.com/file/d/1y-4fZnxekzd5UVEpnPj95ksORIcDq38z/view?usp=sharing) (preprocessed data and the pretrained imitation policy) for a minimal example: finetuning EDGE on AIST++. You can directly run following scripts:
 ```bash
 cd code/rl_finetune
-# download EDGE checkpoint.
-bash download_mode.sh
+# download the EDGE checkpoint.
+bash download_model.sh
 # download preprocessed data of AIST++ and the pretrained imitation policy.
 bash download_data.sh
 ``` 
@@ -262,4 +262,4 @@ This repository is built on top of the following amazing repositories:
 * SMPL models and layer is from: [SMPL-X model](https://github.com/vchoutas/smplx)
 * README template is from: [PHC](https://github.com/ZhengyiLuo/PHC)
 
-Please follow the lisence of the above repositories for usage. 
+Please follow the licenses of the above repositories for usage.
