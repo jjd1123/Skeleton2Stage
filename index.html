@@ -8,7 +8,7 @@
   <!-- TODO: Replace with your paper title and author names -->
   <meta name="title" content="Skeleton2Stage: Reward-Guided Fine-Tuning for Physically Plausible Dance Generation - Jidong Jia, Youjian Zhang, Huan Fu, Dacheng Tao">
   <!-- TODO: Write a compelling 150-160 character description of your research -->
-  <meta name="description" content="Skeleton2Stage distills simulator-derived physical priors via RLFT, closing the skeleton-to-mesh gap for physically plausible dance generation.">
+  <meta name="description" content="Skeleton2Stage is a post-training physics-prior distillation framework that addresses the practical requirement that generated dances remain physically plausible under full-body mesh visualization.">
   <!-- TODO: Add 5-10 relevant keywords for your research area -->
   <meta name="keywords" content="Dance generation, Reinforcement learning, Physical simulation">
   <!-- TODO: List all authors -->
@@ -23,7 +23,7 @@
   <!-- TODO: Same as paper title above -->
   <meta property="og:title" content="Skeleton2Stage: Reward-Guided Fine-Tuning for Physically Plausible Dance Generation">
   <!-- TODO: Same as description above -->
-  <meta property="og:description" content="Skeleton2Stage distills simulator-derived physical priors via RLFT, closing the skeleton-to-mesh gap for physically plausible dance generation.">
+  <meta property="og:description" content="Skeleton2Stage is a post-training physics-prior distillation framework that addresses the practical requirement that generated dances remain physically plausible under full-body mesh visualization.">
   <!-- TODO: Replace with your actual website URL -->
   <meta property="og:url" content="https://jjd1123.github.io/Skeleton2Stage/">
   <!-- TODO: Create a 1200x630px preview image and update path -->
@@ -43,7 +43,7 @@
   <!-- TODO: Same as paper title above -->
   <meta name="twitter:title" content="Skeleton2Stage: Reward-Guided Fine-Tuning for Physically Plausible Dance Generation">
   <!-- TODO: Same as description above -->
-  <meta name="twitter:description" content="Skeleton2Stage distills simulator-derived physical priors via RLFT, closing the skeleton-to-mesh gap for physically plausible dance generation.">
+  <meta name="twitter:description" content="Skeleton2Stage is a post-training physics-prior distillation framework that addresses the practical requirement that generated dances remain physically plausible under full-body mesh visualization.">
   <!-- TODO: Same as social preview image above -->
   <meta name="twitter:image" content="https://raw.githubusercontent.com/jjd1123/Skeleton2Stage/main/assets/method.png">
   <meta name="twitter:image:alt" content="Skeleton2Stage: Reward-Guided Fine-Tuning for Physically Plausible Dance Generation - Research Preview">
@@ -114,7 +114,7 @@
     "@context": "https://schema.org",
     "@type": "ScholarlyArticle",
     "headline": "Skeleton2Stage: Reward-Guided Fine-Tuning for Physically Plausible Dance Generation",
-    "description": "Skeleton2Stage distills simulator-derived physical priors via RLFT, closing the skeleton-to-mesh gap for physically plausible dance generation.",
+    "description": "Skeleton2Stage is a post-training physics-prior distillation framework that addresses the practical requirement that generated dances remain physically plausible under full-body mesh visualization.",
     "author": [
       {
         "@type": "Person",
@@ -157,7 +157,7 @@
     "url": "https://jjd1123.github.io/Skeleton2Stage/",
     "image": "https://raw.githubusercontent.com/jjd1123/Skeleton2Stage/main/assets/method.png",
     "keywords": ["dance generation", "reinforcement learning", "physical simulation", "machine learning", "computer vision"],
-    "abstract": "Despite advances in dance generation, most methods are trained in the skeletal domain, overlooking the practical requirement that generated motions remain physically plausible under full-body mesh visualization. Consequently, motions that appear plausible as joint trajectories often exhibit body self-penetration and Foot-Ground Contact (FGC) anomalies under mesh visualization, degrading visual quality and limiting real-world applicability. To address this issue, we propose Skeleton2Stage, a post-training physics-prior distillation framework for physically plausible dance generation. Our key idea is to leverage a physical simulator as a plausibility evaluator and internalize physical priors into diffusion models via Reinforcement Learning Fine-Tuning (RLFT). By evaluating motions sampled from the pretrained generator and increasing the likelihood of more physically plausible ones, RLFT improves physical plausibility while preserving the pretrained dance prior in terms of motion dynamics, music alignment, naturalness, and temporal coherence. Specifically, we first introduce two physics-based rewards: (i) an imitation reward that assesses overall physical plausibility based on motion imitability in the simulator (penalizing penetration and foot skating), and (ii) a Foot-Ground Deviation reward, complemented by lightweight test-time guidance, to better capture dynamic foot-ground interaction. However, we find that optimizing for physical plausibility alone tends to push the model toward freezing motions. We therefore introduce an anti-freezing reward to preserve motion dynamics. Experiments across multiple dance datasets demonstrate a 49% reduction in self-penetration while preserving overall dance quality.",
+    "abstract": "Despite advances in dance generation, most methods are trained in the skeletal domain, overlooking the practical requirement that generated motions remain physically plausible under full-body mesh visualization. Consequently, motions that appear plausible as joint trajectories often exhibit body self-penetration and Foot-Ground Contact (FGC) anomalies under mesh visualization, degrading visual quality and limiting real-world applicability. To address this issue, we propose Skeleton2Stage, a post-training physics-prior distillation framework for physically plausible dance generation. Our key idea is to leverage a physical simulator as a plausibility evaluator and internalize physical priors into diffusion models via Reinforcement Learning Fine-Tuning (RLFT). By evaluating motions sampled from the pretrained generator and increasing the likelihood of more physically plausible ones, RLFT improves physical plausibility while preserving the pretrained dance prior in terms of motion dynamics, music alignment, naturalness, and temporal coherence. Specifically, we first introduce two physics-based rewards: (i) an imitation reward that assesses overall physical plausibility based on motion imitability in the simulator (penalizing penetration and foot skating), and (ii) a Foot-Ground Deviation reward, complemented by lightweight test-time guidance, to better capture dynamic foot-ground interaction. However, we find that optimizing for physical plausibility alone tends to push the model toward freezing motions. We therefore introduce an anti-freezing reward to preserve motion dynamics. Experiments across multiple dance generators and datasets consistently demonstrate improved physical plausibility while preserving overall dance quality. On AIST++ with EDGE as the base generator, Skeleton2Stage reduces self-penetration by 49%.",
     "citation": "BIBTEX_CITATION_HERE",
     "isAccessibleForFree": true,
     "license": "https://creativecommons.org/licenses/by/4.0/",
@@ -341,12 +341,26 @@
       </video>
       <div class="tldr-box">
         <p class="tldr-label">TL;DR</p>
-        <p class="tldr-text"><strong>Skeleton2Stage</strong> closes the <strong>skeleton-to-mesh gap</strong> through <strong>post-training physics-prior distillation</strong>: a physical simulator evaluates generated dances, and RLFT internalizes the resulting feedback into the diffusion model.</p>
-        <p class="tldr-text">Imitation, FGD, and anti-freezing rewards jointly improve full-body plausibility and foot-ground interaction while preserving dynamics, music alignment, naturalness, and temporal coherence—reducing self-penetration by <strong>49%</strong>.</p>
+        <p class="tldr-text">
+  Most existing dance generation methods are trained in the skeletal domain,
+  overlooking the practical requirement that generated motions remain
+  physically plausible under full-body mesh visualization.
+</p>
+
+<p class="tldr-text">
+  <strong>Skeleton2Stage</strong> is a <strong>post-training physics-prior
+  distillation framework</strong> that uses a physical simulator as a
+  <strong>plausibility evaluator</strong> and distills its physical priors
+  into pretrained generators through <strong>RLFT</strong>. Experiments
+  across multiple generators and datasets demonstrate improved physical
+  plausibility while preserving overall dance quality. On AIST++ with EDGE
+  as the base generator, Skeleton2Stage reduces self-penetration by
+  <strong>49%</strong>.
+</p>
       </div>
       <!-- TODO: Replace with your video description -->
       <!-- <h2 class="subtitle has-text-centered">
-        We propose <strong>Skeleton2Stage</strong>, which bridges the gap between skeleton-level motion generation and mesh-level body visualization, enabling generative models to produce physically plausible dances when visualized with full-body meshes.
+        We propose <strong>Skeleton2Stage</strong> to improve the physical plausibility of generated dances under full-body mesh visualization.
       </h2> -->
     </div>
   </div>
@@ -362,7 +376,7 @@
         <div class="content has-text-justified">
           <!-- Latest paper abstract -->
           <p>
-            Despite advances in dance generation, most methods are trained in the skeletal domain, overlooking the practical requirement that generated motions remain physically plausible under full-body mesh visualization. Consequently, motions that appear plausible as joint trajectories often exhibit body self-penetration and Foot-Ground Contact (FGC) anomalies under mesh visualization, degrading visual quality and limiting real-world applicability. To address this issue, we propose Skeleton2Stage, a post-training physics-prior distillation framework for physically plausible dance generation. Our key idea is to leverage a physical simulator as a plausibility evaluator and internalize physical priors into diffusion models via Reinforcement Learning Fine-Tuning (RLFT). By evaluating motions sampled from the pretrained generator and increasing the likelihood of more physically plausible ones, RLFT improves physical plausibility while preserving the pretrained dance prior in terms of motion dynamics, music alignment, naturalness, and temporal coherence. Specifically, we first introduce two physics-based rewards: (i) an imitation reward that assesses overall physical plausibility based on motion imitability in the simulator (penalizing penetration and foot skating), and (ii) a Foot-Ground Deviation reward, complemented by lightweight test-time guidance, to better capture dynamic foot-ground interaction. However, we find that optimizing for physical plausibility alone tends to push the model toward freezing motions. We therefore introduce an anti-freezing reward to preserve motion dynamics. Experiments across multiple dance datasets demonstrate a 49% reduction in self-penetration while preserving overall dance quality.
+            Despite advances in dance generation, most methods are trained in the skeletal domain, overlooking the practical requirement that generated motions remain physically plausible under full-body mesh visualization. Consequently, motions that appear plausible as joint trajectories often exhibit body self-penetration and Foot-Ground Contact (FGC) anomalies under mesh visualization, degrading visual quality and limiting real-world applicability. To address this issue, we propose Skeleton2Stage, a post-training physics-prior distillation framework for physically plausible dance generation. Our key idea is to leverage a physical simulator as a plausibility evaluator and internalize physical priors into diffusion models via Reinforcement Learning Fine-Tuning (RLFT). By evaluating motions sampled from the pretrained generator and increasing the likelihood of more physically plausible ones, RLFT improves physical plausibility while preserving the pretrained dance prior in terms of motion dynamics, music alignment, naturalness, and temporal coherence. Specifically, we first introduce two physics-based rewards: (i) an imitation reward that assesses overall physical plausibility based on motion imitability in the simulator (penalizing penetration and foot skating), and (ii) a Foot-Ground Deviation reward, complemented by lightweight test-time guidance, to better capture dynamic foot-ground interaction. However, we find that optimizing for physical plausibility alone tends to push the model toward freezing motions. We therefore introduce an anti-freezing reward to preserve motion dynamics. Experiments across multiple dance generators and datasets consistently demonstrate improved physical plausibility while preserving overall dance quality. On AIST++ with EDGE as the base generator, Skeleton2Stage reduces self-penetration by 49%.
           </p>
         </div>
       </div>
