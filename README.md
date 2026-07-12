@@ -16,11 +16,11 @@ Shanghai Jiao Tong University
 ## Abstract
 Official implementation of the paper **"Skeleton2Stage: Reward-Guided Fine-Tuning for Physically Plausible Dance Generation."**
 
-Existing dance generation models typically operate on sparse skeletons and often overlook the geometric constraints of the human body, leading to artifacts such as body interpenetration and unstable foot-ground contact when visualized with full-body meshes.
+Skeleton2Stage is a **post-training physics-prior distillation** framework that addresses the **skeleton-to-mesh gap** in dance generation: motions that look plausible as sparse joint trajectories can still exhibit self-penetration and Foot-Ground Contact (FGC) artifacts when rendered as full-body meshes.
 
-In this work, we identify this critical gap between skeleton-level motion generation and mesh-level body visualization, which we refer to as the **skeleton-to-mesh gap**. To bridge this gap, we propose Skeleton2Stage to distill the physics-based motion priors from the physics simulator and heuristic constraints into the generative models via a reward-guided fine-tuning framework. 
+Rather than repairing individual samples at inference time, Skeleton2Stage uses a physical simulator and an imitation policy as a **physical plausibility evaluator**. Reinforcement Learning Fine-Tuning (RLFT) then increases the likelihood of simulator-plausible motions, internalizing physical priors into pretrained diffusion generators while retaining their motion dynamics, music alignment, naturalness, and temporal coherence.
 
-Experiments show that Skeleton2Stage improves the physical plausibility of generated dances and reduces common artifacts when visualized with full-body meshes.
+Our reward system combines: (i) an imitation reward for full-body physical plausibility, (ii) a Foot-Ground Deviation (FGD) reward with lightweight test-time guidance for dynamic foot-ground interaction, and (iii) an anti-freezing reward that prevents physical optimization from collapsing motion dynamics. Across multiple dance datasets, Skeleton2Stage reduces self-penetration by **49%** while preserving overall dance quality.
 
 ![method](assets/method.png)
 
