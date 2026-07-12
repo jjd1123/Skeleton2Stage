@@ -16,11 +16,11 @@ Shanghai Jiao Tong University
 ## Abstract
 Official implementation of the paper **"Skeleton2Stage: Reward-Guided Fine-Tuning for Physically Plausible Dance Generation."**
 
-Skeleton2Stage is a **post-training physics-prior distillation** framework that addresses the **skeleton-to-mesh gap** in dance generation: motions that look plausible as sparse joint trajectories can still exhibit self-penetration and Foot-Ground Contact (FGC) artifacts when rendered as full-body meshes.
+Despite advances in dance generation, most existing methods are trained in the skeletal domain, overlooking the practical requirement that generated motions remain physically plausible under full-body mesh visualization. Consequently, motions that appear plausible as joint trajectories may still exhibit body self-penetration and abnormal Foot-Ground Contact (FGC) when rendered as skinned human meshes.
 
-Rather than repairing individual samples at inference time, Skeleton2Stage uses a physical simulator and an imitation policy as a **physical plausibility evaluator**. Reinforcement Learning Fine-Tuning (RLFT) then increases the likelihood of simulator-plausible motions, internalizing physical priors into pretrained diffusion generators while retaining their motion dynamics, music alignment, naturalness, and temporal coherence.
+Skeleton2Stage is a **post-training physics-prior distillation** framework that leverages a physical simulator as a **plausibility evaluator** and internalizes simulator-derived physical priors into pretrained diffusion generators via Reinforcement Learning Fine-Tuning (RLFT). Rather than correcting each sample during inference, it evaluates motions sampled from the pretrained generator and increases the likelihood of those exhibiting higher physical plausibility, thereby reshaping the generator distribution toward more physically plausible dances while retaining its pretrained dance prior.
 
-Our reward system combines: (i) an imitation reward for full-body physical plausibility, (ii) a Foot-Ground Deviation (FGD) reward with lightweight test-time guidance for dynamic foot-ground interaction, and (iii) an anti-freezing reward that prevents physical optimization from collapsing motion dynamics. Across multiple dance datasets, Skeleton2Stage reduces self-penetration by **49%** while preserving overall dance quality.
+The framework combines (i) an imitation reward for overall physical plausibility, (ii) a Foot-Ground Deviation (FGD) reward to better capture dynamic foot-ground interaction, and (iii) an anti-freezing reward to preserve motion dynamics. Experiments across multiple dance generators and datasets consistently demonstrate improved physical plausibility while preserving overall dance quality. On AIST++ with EDGE as the base generator, Skeleton2Stage reduces self-penetration by **49%**.
 
 ![method](assets/method.png)
 
@@ -69,11 +69,11 @@ Our reward system combines: (i) an imitation reward for full-body physical plaus
 - [ ] Release guidance for custom models and rewards.
 
 ## Introduction
-Skeleton2Stage is a framework that improves the physical plausibility of diffusion-based dance generation.
+Skeleton2Stage is a post-training physics-prior distillation framework that improves the physical plausibility of dance generation.
 
-Most existing dance generation models operate purely in skeleton space. However, when the generated motions are visualized with full-body meshes, they often violate geometric constraints of the human body, resulting in artifacts such as body interpenetration and unstable foot-ground contact.
+Most existing dance generation models operate in the skeletal domain. However, when generated motions are visualized as full-body skinned meshes, motions that appear plausible as joint trajectories may still exhibit body self-penetration and abnormal foot-ground contact. This mismatch between skeletal motion generation and full-body mesh visualization leads to visible physical artifacts and degrades the quality of the generated content.
 
-To address this problem, Skeleton2Stage leverages a physics-based humanoid controller as a **physical plausibility evaluator**. The evaluator provides feedback on whether generated motions satisfy physical constraints, especially those arising from human body geometry. Together with complementary reward signals, this feedback encourages the generative model to internalize physics-aware motion priors via RLFT, producing motions that remain physically plausible when visualized with a human body mesh.
+To address this problem, Skeleton2Stage uses a physical simulator equipped with an imitation policy as a **physical plausibility evaluator**. The evaluator assesses whether generated motions remain plausible under physical and full-body mesh constraints. Together with complementary reward signals, the simulator-derived feedback is distilled into the generative model via RLFT, enabling it to generate dances with improved physical plausibility while retaining its pretrained dance prior.
 
 ### Docs 
 
